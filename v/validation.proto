@@ -1,0 +1,21 @@
+
+//python3 -m grpc_tools.protoc --proto_path=. ./validation.proto --python_out=. --grpc_python_out=.
+syntax = "proto3";
+
+package unary;
+
+service Checks{
+    rpc GetChecks (Message) returns (MessageResponse) {}
+}
+
+message Message{
+    repeated string devices = 1;
+    repeated string checks = 2;
+    //int32 pre = 3;
+    //int32 post = 4;
+}
+
+message MessageResponse{
+    string message = 1;
+    string file = 2;
+}
