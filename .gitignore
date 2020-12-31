@@ -131,3 +131,4 @@ dmypy.json
 # Testing files
 *.json
 *.yaml
+.DS_Store
