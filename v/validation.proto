@@ -11,6 +11,7 @@ service Checks{
 message Message{
     repeated string devices = 1;
     repeated string checks = 2;
+    string task_id = 3;
     //int32 pre = 3;
     //int32 post = 4;
 }

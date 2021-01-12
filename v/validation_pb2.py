@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x10validation.proto\x12\x05unary\"*\n\x07Message\x12\x0f\n\x07\x64\x65vices\x18\x01 \x03(\t\x12\x0e\n\x06\x63hecks\x18\x02 \x03(\t\"0\n\x0fMessageResponse\x12\x0f\n\x07message\x18\x01 \x01(\t\x12\x0c\n\x04\x66ile\x18\x02 \x01(\t2?\n\x06\x43hecks\x12\x35\n\tGetChecks\x12\x0e.unary.Message\x1a\x16.unary.MessageResponse\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\x10validation.proto\x12\x05unary\";\n\x07Message\x12\x0f\n\x07\x64\x65vices\x18\x01 \x03(\t\x12\x0e\n\x06\x63hecks\x18\x02 \x03(\t\x12\x0f\n\x07task_id\x18\x03 \x01(\t\"0\n\x0fMessageResponse\x12\x0f\n\x07message\x18\x01 \x01(\t\x12\x0c\n\x04\x66ile\x18\x02 \x01(\t2?\n\x06\x43hecks\x12\x35\n\tGetChecks\x12\x0e.unary.Message\x1a\x16.unary.MessageResponse\"\x00\x62\x06proto3'
 )
 
 
@@ -47,6 +47,13 @@ _MESSAGE = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='task_id', full_name='unary.Message.task_id', index=2,
+      number=3, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -60,7 +67,7 @@ _MESSAGE = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=27,
-  serialized_end=69,
+  serialized_end=86,
 )
 
 
@@ -98,8 +105,8 @@ _MESSAGERESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=71,
-  serialized_end=119,
+  serialized_start=88,
+  serialized_end=136,
 )
 
 DESCRIPTOR.message_types_by_name['Message'] = _MESSAGE
@@ -129,8 +136,8 @@ _CHECKS = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=121,
-  serialized_end=184,
+  serialized_start=138,
+  serialized_end=201,
   methods=[
   _descriptor.MethodDescriptor(
     name='GetChecks',
