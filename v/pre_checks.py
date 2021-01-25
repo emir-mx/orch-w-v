@@ -1,7 +1,8 @@
 from db.buildDB import DataBase
-from InitNornir_deviation import InitNornir
-from nornir_scrapli.tasks import send_commands
-from nornir_netmiko.tasks import netmiko_send_command
+from nornir_deviations.InitNornir_deviation import InitNornir
+from nornir_deviations.nornir_scrapli_send_commands import (
+    send__commands as send_commands,
+)
 import grpc
 from concurrent import futures
 import time
@@ -10,18 +11,6 @@ import validation_pb2_grpc as pb2_grpc
 import requests
 import json
 
-# client = MongoClient(
-#     "mongodb+srv://emires:Pepies2020@cluster0.xlbgx.mongodb.net/checks?retryWrites=true&w=majority"
-# )
-# db = client["checks"]
-
-# collections = db.get_collection("collection_checks")
-
-# ios_cli = collections.find({"platform.ios.method.cli": {"$exists": "true"}})
-
-# ios_cli_dict = ios_cli[0]["platform"]["ios"]["method"]["cli"]
-
-# health = ios_cli_dict["health"]
 
 validation_endpoint = "http://127.0.0.1:8000/api/v1/validations"
 headers = {
@@ -44,15 +33,18 @@ class ValidationService(pb2_grpc.ChecksServicer):
         output_path = {"results": f"/{task_id}/pre"}
 
         def getter(task, **kwargs):
+            print("IN GETTER")
             platform = task.host.platform
             commands = list(DB.get_db()[platform][kwargs["check"]].values())
-            getter = task.run(task=send_commands, commands=commands)
+            getter = task.run(task=send_commands, commands=commands, task_id=task_id)
             s = "*" * 40
             result = f"{getter.result}\n\n{s}"
             with open(f"{kwargs['check']}.txt", "a") as f:
                 f.write(result)
 
+        print("before for")
         for check in checks:
+            print("getter")
             nr.run(task=getter, **{"check": check})
 
         # def get_health(task):

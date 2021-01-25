@@ -1,3 +1,9 @@
+#
+#
+# Deviation of InitNornir module to add device filtering during the Init process
+#
+#
+
 from typing import Any
 from copy import deepcopy
 
@@ -69,6 +75,9 @@ def InitNornir(
 
     config.logging.configure()
 
+    """
+    Start deviation
+    """
     inventory = load_inventory(config)
 
     inventory_copy = deepcopy(inventory)
@@ -77,6 +86,9 @@ def InitNornir(
         for device in inventory_copy.hosts.items():
             if device[1].hostname not in devices:
                 inventory.hosts.pop(device[0])
+    """
+    End deviations
+    """
 
     return Nornir(
         inventory,
