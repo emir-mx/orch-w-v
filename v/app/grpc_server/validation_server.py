@@ -1,3 +1,10 @@
+from __future__ import absolute_import
+import os
+import sys
+
+BASE_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(BASE_PATH)
+
 from db.buildDB import DataBase
 from nornir_deviations.InitNornir_deviation import InitNornir
 from nornir_deviations.nornir_scrapli_send_commands import (
@@ -6,8 +13,8 @@ from nornir_deviations.nornir_scrapli_send_commands import (
 import grpc
 from concurrent import futures
 import time
-import validation_pb2 as pb2
-import validation_pb2_grpc as pb2_grpc
+from . import validation_pb2 as pb2
+from . import validation_pb2_grpc as pb2_grpc
 import requests
 import json
 
@@ -26,19 +33,20 @@ class ValidationService(pb2_grpc.ChecksServicer):
         task_id = request.task_id
         devices = request.devices
         checks = request.checks
-        nr = InitNornir(config_file="config.yaml", devices=devices)
+        nr = InitNornir(
+            config_file="/Users/emires/Desktop/DevNet/orch-w-v/v/config.yaml",
+            devices=devices,
+        )
         platforms = [x["platform"] for x in nr.inventory.dict()["hosts"].values()]
         platforms = set(platforms)
         DB = DataBase(platforms)
         output_path = {"results": f"/{task_id}/pre"}
 
         def getter(task, **kwargs):
-            print("IN GETTER")
             platform = task.host.platform
             commands = list(DB.get_db()[platform][kwargs["check"]].values())
             getter = task.run(task=send_commands, commands=commands, task_id=task_id)
 
-        print("before for")
         for check in checks:
             print("getter")
             nr.run(task=getter, **{"check": check})

@@ -31,6 +31,8 @@ def process_command_result(
         result: str = scrapli_response.result
         return result
     print("IN RESULTS")
+    print(scrapli_response.result)
+
     write_legacy_format(
         task_id=task_id, commands=commands, response=scrapli_response, host=host
     )
