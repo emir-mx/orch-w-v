@@ -35,12 +35,13 @@ def send__commands(
     Raises:
         N/A
     """
-    print("COMMANDS")
-
-    scrapli_conn = task.host.get_connection(
-        "scrapli", task.nornir.config
-    )  # <class 'scrapli.driver.core.cisco_iosxe.driver.IOSXEDriver'>
-
+    try:
+        scrapli_conn = task.host.get_connection(
+            "scrapli", task.nornir.config
+        )  # <class 'scrapli.driver.core.cisco_iosxe.driver.IOSXEDriver'>
+    except:
+        result = None
+        return result
     scrapli_response = scrapli_conn.send_commands(
         commands=commands,
         strip_prompt=strip_prompt,

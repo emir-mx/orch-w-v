@@ -10,6 +10,8 @@ from nornir_deviations.InitNornir_deviation import InitNornir
 from nornir_deviations.nornir_scrapli_send_commands import (
     send__commands as send_commands,
 )
+from exceptions import status
+from exceptions.exceptions import ConnectionException
 import grpc
 from concurrent import futures
 import time
@@ -40,18 +42,26 @@ class ValidationService(pb2_grpc.ChecksServicer):
         platforms = [x["platform"] for x in nr.inventory.dict()["hosts"].values()]
         platforms = set(platforms)
         DB = DataBase(platforms)
-        output_path = {"results": f"/{task_id}/pre"}
+        global result
+        result = {"results": f"/{task_id}/"}
 
         def getter(task, **kwargs):
             platform = task.host.platform
             commands = list(DB.get_db()[platform][kwargs["check"]].values())
             getter = task.run(task=send_commands, commands=commands, task_id=task_id)
+            if not getter.result:
+                global result
+                result = {"results": f"Complete with errors /{task_id}/"}
+                with open("Error.txt", "a") as f:
+                    f.write(f"Connection fail to {task.host.hostname}\n")
+                raise ConnectionException(
+                    status_code=status.SSH_255_CONNECTION_FAIL, host=task.host.hostname
+                )
 
         for check in checks:
-            print("getter")
             nr.run(task=getter, **{"check": check})
 
-        data = json.dumps(output_path, indent=4)
+        data = json.dumps(result, indent=4)
         requests.patch(
             url=f"{validation_endpoint}/{task_id}",
             headers=headers,
