@@ -1,4 +1,8 @@
-from pymongo import MongoClient
+from pymongo import MongoClient, errors
+from exceptions import status
+from exceptions.exceptions import DBException
+import sys
+
 
 client = MongoClient(
     "mongodb+srv://emires:Pepies2020@cluster0.xlbgx.mongodb.net/checks?retryWrites=true&w=majority"
@@ -20,3 +24,10 @@ class DataBase:
             )
             db[platform] = temp[0]["platform"][platform]["method"]["cli"]
         return db
+
+    def get_commands(self, db, platform, check):
+        try:
+            commands = list(db.get_db()[platform][check["check"]].values())
+            return commands
+        except errors.ServerSelectionTimeoutError as e:
+            print(e)
